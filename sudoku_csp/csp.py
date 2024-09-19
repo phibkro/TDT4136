@@ -10,7 +10,7 @@ class CSP:
         edges: list[tuple[str, str]],
     ):
         """Constructs a CSP instance with the given variables, domains and edges.
-        
+
         Parameters
         ----------
         variables : list[str]
@@ -40,13 +40,17 @@ class CSP:
             for value1 in self.domains[variable1]:
                 for value2 in self.domains[variable2]:
                     if value1 != value2:
-                        self.binary_constraints[(variable1, variable2)].add((value1, value2))
-                        self.binary_constraints[(variable1, variable2)].add((value2, value1))
+                        self.binary_constraints[(variable1, variable2)].add(
+                            (value1, value2)
+                        )
+                        self.binary_constraints[(variable1, variable2)].add(
+                            (value2, value1)
+                        )
 
     def ac_3(self) -> bool:
         """Performs AC-3 on the CSP.
         Meant to be run prior to calling backtracking_search() to reduce the search for some problems.
-        
+
         Returns
         -------
         bool
@@ -57,22 +61,61 @@ class CSP:
 
     def backtracking_search(self) -> None | dict[str, Any]:
         """Performs backtracking search on the CSP.
-        
+
         Returns
         -------
         None | dict[str, Any]
             A solution if any exists, otherwise None
         """
+
         def backtrack(assignment: dict[str, Any]):
-            # YOUR CODE HERE (and remove the assertion below)
-            assert False, "Not implemented"
+            # If all variables are assigned, then the assignment is a solution
+            if len(assignment) >= len(self.variables):
+                return assignment
+            # select unassigned variable
+            var = self.select_unassigned_variable(assignment)
+            # order domain values
+            for value in self.domains.get(var):
+                assignment[var] = value
+                if self.is_consistent(assignment):
+                    result = backtrack(assignment)
+                    if result:
+                        return result
+            # no solution exists
+            return False
 
         return backtrack({})
+
+    def is_consistent(self, assignment: dict[str, Any]) -> bool:
+        """
+        Checks if the current assignment is consistent with the binary constraints.
+        Returns True if the assignment is consistent, False otherwise
+        """
+        # Check edges
+        for edge in self.binary_constraints:
+            # If an edge is assigned, check if the assignment is consistent
+            if edge[0] in assignment and edge[1] in assignment:
+                if (
+                    assignment[edge[0]],
+                    assignment[edge[1]],
+                ) not in self.binary_constraints[(edge[0], edge[1])]:
+                    return False
+        return True
+
+    def select_unassigned_variable(self, assignment: dict[str, Any]):
+        """
+        Returns an unassigned variable, or None if there is none
+        """
+        for var in self.variables:
+            if var not in assignment:
+                return var
+        # no unassigned variables
+        return None
 
 
 def alldiff(variables: list[str]) -> list[tuple[str, str]]:
     """Returns a list of edges interconnecting all of the input variables
-    
+
     Parameters
     ----------
     variables : list[str]
@@ -83,4 +126,8 @@ def alldiff(variables: list[str]) -> list[tuple[str, str]]:
     list[tuple[str, str]]
         List of edges in the form (a, b)
     """
-    return [(variables[i], variables[j]) for i in range(len(variables) - 1) for j in range(i + 1, len(variables))]
+    return [
+        (variables[i], variables[j])
+        for i in range(len(variables) - 1)
+        for j in range(i + 1, len(variables))
+    ]

@@ -3,21 +3,20 @@
 
 from csp import CSP, alldiff
 
-variables = ['WA', 'NT', 'Q', 'NSW', 'V', 'SA', 'T']
+variables = ["WA", "NT", "Q", "NSW", "V", "SA", "T"]
 csp = CSP(
     variables=variables,
-    domains={variable: {'red', 'green', 'blue'}
-             for variable in variables},
+    domains={variable: {"red", "green", "blue"} for variable in variables},
     edges=[
-        ('SA', 'WA'),
-        ('SA', 'NT'),
-        ('SA', 'Q'),
-        ('SA', 'NSW'),
-        ('SA', 'V'),
-        ('WA', 'NT'),
-        ('NT', 'Q'),
-        ('Q', 'NSW'),
-        ('NSW', 'V'),
+        ("SA", "WA"),
+        ("SA", "NT"),
+        ("SA", "Q"),
+        ("SA", "NSW"),
+        ("SA", "V"),
+        ("WA", "NT"),
+        ("NT", "Q"),
+        ("Q", "NSW"),
+        ("NSW", "V"),
     ],
 )
 
