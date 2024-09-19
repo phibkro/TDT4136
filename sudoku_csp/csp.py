@@ -81,8 +81,9 @@ class CSP:
                     result = backtrack(assignment)
                     if result:
                         return result
+                del assignment[var]
             # no solution exists
-            return False
+            return None
 
         return backtrack({})
 
