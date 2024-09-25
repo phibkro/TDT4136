@@ -56,8 +56,38 @@ class CSP:
         bool
             False if a domain becomes empty, otherwise True
         """
-        # YOUR CODE HERE (and remove the assertion below)
-        assert False, "Not implemented"
+        queue = Queue()
+        for edge in self.binary_constraints:
+            queue.put(edge)
+
+        while not queue.empty():
+            edge = queue.get()
+            if self.revise(edge):
+                if len(self.domains[edge[0]]) <= 0:
+                    return False
+                for constraint in self.binary_constraints:
+                    if constraint == edge:
+                        pass
+                    elif edge[0] in constraint:
+                        Xk = (
+                            constraint[0] if constraint[1] == edge[0] else constraint[1]
+                        )
+                        queue.put((Xk, edge[1]))
+        return True
+
+    def revise(self, edge: tuple[str, str]) -> bool:
+        revised = False
+        if edge in self.binary_constraints:
+            for x in self.domains[
+                edge[0]
+            ].copy():  # copy() to avoid modifying the original set while iterating, which throws an error
+                if not any(
+                    (x, y) in self.binary_constraints[edge]
+                    for y in self.domains[edge[1]]
+                ):
+                    self.domains[edge[0]].remove(x)
+                    revised = True
+        return revised
 
     def backtracking_search(self) -> None | dict[str, Any]:
         """Performs backtracking search on the CSP.
