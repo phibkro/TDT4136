@@ -81,10 +81,12 @@ class CSP:
             for x in self.domains[
                 edge[0]
             ].copy():  # copy() to avoid modifying the original set while iterating, which throws an error
-                if not any(
-                    (x, y) in self.binary_constraints[edge]
-                    for y in self.domains[edge[1]]
-                ):
+                for y in self.domains[edge[1]]:
+                    if (x, y) in self.binary_constraints[edge]:
+                        break
+                else:
+                    # Only runs if the loop completes without breaking
+                    # If no value in the domain of X satisfies the constraint with a value in the domain of Y
                     self.domains[edge[0]].remove(x)
                     revised = True
         return revised
