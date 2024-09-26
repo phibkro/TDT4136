@@ -1,6 +1,7 @@
 # Sudoku problems.
 # The CSP.ac_3() and CSP.backtrack() methods need to be implemented
 
+import time
 from csp import CSP, alldiff
 
 
@@ -11,16 +12,19 @@ def print_solution(solution):
     """
     for row in range(width):
         for col in range(width):
-            print(solution[f'X{row+1}{col+1}'], end=" ")
+            print(solution[f"X{row+1}{col+1}"], end=" ")
             if col == 2 or col == 5:
-                print('|', end=" ")
+                print("|", end=" ")
         print("")
         if row == 2 or row == 5:
-            print('------+-------+------')
+            print("------+-------+------")
 
 
 # Choose Sudoku problem
-grid = open('sudoku_easy.txt').read().split()
+grid = open("sudoku_easy.txt").read().split()
+# grid = open("sudoku_medium.txt").read().split()
+# grid = open("sudoku_hard.txt").read().split()
+# grid = open("sudoku_very_hard.txt").read().split()
 
 width = 9
 box_width = 3
@@ -28,34 +32,39 @@ box_width = 3
 domains = {}
 for row in range(width):
     for col in range(width):
-        if grid[row][col] == '0':
-            domains[f'X{row+1}{col+1}'] = set(range(1, 10))
+        if grid[row][col] == "0":
+            domains[f"X{row+1}{col+1}"] = set(range(1, 10))
         else:
-            domains[f'X{row+1}{col+1}'] = {int(grid[row][col])}
+            domains[f"X{row+1}{col+1}"] = {int(grid[row][col])}
 
 edges = []
 for row in range(width):
-    edges += alldiff([f'X{row+1}{col+1}' for col in range(width)])
+    edges += alldiff([f"X{row+1}{col+1}" for col in range(width)])
 for col in range(width):
-    edges += alldiff([f'X{row+1}{col+1}' for row in range(width)])
+    edges += alldiff([f"X{row+1}{col+1}" for row in range(width)])
 for box_row in range(box_width):
     for box_col in range(box_width):
         cells = []
         edges += alldiff(
             [
-                f'X{row+1}{col+1}' for row in range(box_row * box_width, (box_row + 1) * box_width)
+                f"X{row+1}{col+1}"
+                for row in range(box_row * box_width, (box_row + 1) * box_width)
                 for col in range(box_col * box_width, (box_col + 1) * box_width)
             ]
         )
 
 csp = CSP(
-    variables=[f'X{row+1}{col+1}' for row in range(width) for col in range(width)],
+    variables=[f"X{row+1}{col+1}" for row in range(width) for col in range(width)],
     domains=domains,
     edges=edges,
 )
-
+start = time.time()
 print(csp.ac_3())
 print_solution(csp.backtracking_search())
+end = time.time()
+print(end - start)
+# print(csp.backtrack_call_count)
+# print(csp.backtrack_failure_count)
 
 # Expected output after implementing csp.ac_3() and csp.backtracking_search():
 # True

@@ -22,6 +22,8 @@ class CSP:
         """
         self.variables = variables
         self.domains = domains
+        self.backtrack_failure_count = 0
+        self.backtrack_call_count = 0
 
         # Binary constraints as a dictionary mapping variable pairs to a set of value pairs.
         #
@@ -62,7 +64,7 @@ class CSP:
 
         while not queue.empty():
             edge = queue.get()
-            if self.revise(edge):
+            if self.arc_reduce(edge):
                 if len(self.domains[edge[0]]) <= 0:
                     return False
                 for constraint in self.binary_constraints:
@@ -75,8 +77,8 @@ class CSP:
                         queue.put((Xk, edge[1]))
         return True
 
-    def revise(self, edge: tuple[str, str]) -> bool:
-        revised = False
+    def arc_reduce(self, edge: tuple[str, str]) -> bool:
+        reduced = False
         if edge in self.binary_constraints:
             for x in self.domains[
                 edge[0]
@@ -88,8 +90,8 @@ class CSP:
                     # Only runs if the loop completes without breaking
                     # If no value in the domain of X satisfies the constraint with a value in the domain of Y
                     self.domains[edge[0]].remove(x)
-                    revised = True
-        return revised
+                    reduced = True
+        return reduced
 
     def backtracking_search(self) -> None | dict[str, Any]:
         """Performs backtracking search on the CSP.
@@ -101,6 +103,11 @@ class CSP:
         """
 
         def backtrack(assignment: dict[str, Any]):
+            self.backtrack_call_count += 1
+            if self.backtrack_call_count % 100000 == 0:
+                print(self.backtrack_call_count)
+                print(f"{self.backtrack_call_count / 3920000 * 100}%")
+            # print_solution(assignment)
             # If all variables are assigned, then the assignment is a solution
             if len(assignment) >= len(self.variables):
                 return assignment
@@ -112,11 +119,13 @@ class CSP:
                 if self.is_consistent(assignment):
                     result = backtrack(assignment)
                     if result:
+                        print(self.backtrack_call_count)
                         return result
                 del assignment[var]
-            # no solution exists
+            self.backtrack_failure_count += 1
             return None
 
+        # print(self.domains)
         return backtrack({})
 
     def is_consistent(self, assignment: dict[str, Any]) -> bool:
