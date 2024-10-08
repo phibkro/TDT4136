@@ -76,3 +76,20 @@ class Game:
                 print("The game is a draw")
         else:
             print(f"It is P{self.to_move(state)+1}'s turn to move")
+
+
+if __name__ == "__main__":
+    from search.minimax import minimax_search
+
+    game = Game()
+
+    state = game.initial_state()
+    game.print(state)
+    while not game.is_terminal(state):
+        player = game.to_move(state)
+        action = minimax_search(game, state)  # The player whose turn it is
+        # is the MAX player
+        print(f"P{player+1}'s action: {action}")
+        assert action is not None
+        state = game.result(state, action)
+        game.print(state)
