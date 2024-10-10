@@ -46,6 +46,7 @@ class Game:
 
 if __name__ == "__main__":
     from search.minimax import minimax_search
+    from search.alpha_beta import alpha_beta_search
 
     game = Game()
 
@@ -53,7 +54,8 @@ if __name__ == "__main__":
     game.print(state)
     while not game.is_terminal(state):
         player = game.to_move(state)
-        action = minimax_search(game, state)  # The player whose turn it is
+        # action = minimax_search(game, state)  # The player whose turn it is
+        action = alpha_beta_search(game, state)
         # is the MAX player
         print(f"P{player+1}'s action: {action}")
         assert action is not None
