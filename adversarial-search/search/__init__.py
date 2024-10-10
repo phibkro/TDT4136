@@ -1,3 +1,4 @@
-__all__ = ["minimax"]
+__all__ = ["minimax", "alpha_beta"]
 
 from . import minimax
+from . import alpha_beta
