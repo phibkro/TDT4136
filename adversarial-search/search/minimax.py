@@ -30,7 +30,10 @@ def minimax_search(game, state):
     """
     Perform the minimax search algorithm to determine the best move for the current player.
 
-    The minimax algorithm is a recursive method used in decision-making and game theory. It provides an optimal move for the player assuming that the opponent also plays optimally. The algorithm works by simulating all possible moves, evaluating the resulting game states, and choosing the move that maximizes the player's minimum gain (hence the name "minimax").
+    The minimax algorithm is a recursive method used in decision-making and game theory.
+    It provides an optimal move for the player assuming that the opponent also plays optimally.
+    The algorithm works by simulating all possible moves, evaluating the resulting game states,
+    and choosing the move that maximizes the player's minimum gain (hence the name "minimax").
 
     Parameters:
     game (Game): An instance of the game being played. It should provide methods like `is_terminal`, `utility`, `actions`, `result`, and `to_move`.
@@ -44,7 +47,8 @@ def minimax_search(game, state):
         """
         Compute the minimum utility value for the opponent's move.
 
-        This function is called when it is the opponent's turn to move. It recursively evaluates all possible moves and returns the move that minimizes the utility value for the opponent.
+        This function is called when it is the opponent's turn to move.
+        It recursively evaluates all possible moves and returns the move that minimizes the utility value for the opponent.
 
         Parameters:
         game (Game): An instance of the game being played.
@@ -66,7 +70,8 @@ def minimax_search(game, state):
         """
         Compute the maximum utility value for the current player's move.
 
-        This function is called when it is the current player's turn to move. It recursively evaluates all possible moves and returns the move that maximizes the utility value for the current player.
+        This function is called when it is the current player's turn to move.
+        It recursively evaluates all possible moves and returns the move that maximizes the utility value for the current player.
 
         Parameters:
         game (Game): An instance of the game being played.
