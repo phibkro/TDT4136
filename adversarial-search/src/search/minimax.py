@@ -89,6 +89,9 @@ def minimax_search(game, state):
                 v, move = v2, a
         return v, move
 
+    # player is captured within the closure of the min_value and max_value functions
+    # a cleaner approach would be to pass player as an argument or get player from the min and max functions
+    # but we choose to follow the pseudocode from the book as closely as possible
     player = game.to_move(state)
     val, move = max_value(game, state)
     return move
