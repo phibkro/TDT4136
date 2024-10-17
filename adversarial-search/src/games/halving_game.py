@@ -44,24 +44,6 @@ class Game:
             print(f"it is P{self.to_move(state)+1}'s turn")
 
 
-if __name__ == "__main__":
-    from search.minimax import minimax_search
-    from search.alpha_beta import alpha_beta_search
-
-    game = Game(5)
-
-    state = game.initial_state()
-    game.print(state)
-    while not game.is_terminal(state):
-        player = game.to_move(state)
-        # action = minimax_search(game, state)  # The player whose turn it is
-        action = alpha_beta_search(game, state)
-        # is the MAX player
-        print(f"P{player+1}'s action: {action}")
-        assert action is not None
-        state = game.result(state, action)
-        game.print(state)
-
 # Expected output:
 # The number is 5 and it is P1's turn
 # P1's action: --
