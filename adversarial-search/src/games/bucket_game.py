@@ -39,6 +39,11 @@ class Game:
     def print(self, state):
         print(f"The state is {state} and ", end="")
         if self.is_terminal(state):
-            print(f"P1's utility is {self.utility(state, 0)}")
+            if self.utility(state, 0) < 0:
+                print(f"P2 wins with a utility of {self.utility(state, 1)}")
+            elif self.utility(state, 0) > 0:
+                print(f"P1 wins with a utility of {self.utility(state, 0)}")
+            else:
+                print("It's a draw")
         else:
             print(f"it is P{self.to_move(state)+1}'s turn")
